@@ -57,6 +57,7 @@
 html {
   min-width: 320px;
   background: var(--background);
+  scrollbar-gutter: stable;
 }
 
 body {

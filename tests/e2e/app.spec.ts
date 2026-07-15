@@ -121,4 +121,29 @@ test.describe("Typing Level Zero", () => {
     await page.getByRole("button", { name: "すべて削除" }).click();
     await expect(page.locator(".empty-state")).toBeVisible();
   });
+
+  test("keeps the header aligned across dashboard routes", async ({ page }) => {
+    const positions = [];
+
+    for (const route of ["analysis", "keys", "history"]) {
+      await page.goto(route);
+
+      positions.push(
+        await page.locator(".topbar").evaluate((element) => {
+          const brand = element.querySelector(".brand")?.getBoundingClientRect();
+          const navigation = element.querySelector(".top-navigation")?.getBoundingClientRect();
+          const themeButton = element.querySelector(".icon-button")?.getBoundingClientRect();
+
+          return {
+            brandX: brand?.x ?? null,
+            navigationX: navigation?.x ?? null,
+            themeX: themeButton?.x ?? null,
+          };
+        }),
+      );
+    }
+
+    expect(positions[1]).toEqual(positions[0]);
+    expect(positions[2]).toEqual(positions[0]);
+  });
 });
