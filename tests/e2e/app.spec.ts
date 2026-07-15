@@ -16,11 +16,42 @@ async function completePrompt(page: Page): Promise<string> {
   return prompt;
 }
 
+async function countSavedPlays(page: Page): Promise<number> {
+  return page.evaluate(
+    () =>
+      new Promise<number>((resolve) => {
+        const request = indexedDB.open("typing-level-zero");
+
+        request.onerror = () => resolve(-1);
+
+        request.onsuccess = () => {
+          const database = request.result;
+          const countRequest = database.transaction("runs").objectStore("runs").count();
+
+          countRequest.onerror = () => resolve(-1);
+
+          countRequest.onsuccess = () => {
+            resolve(countRequest.result);
+            database.close();
+          };
+        };
+      }),
+  );
+}
+
 test.describe("Typing Level Zero", () => {
   test("completes a play, persists history, and opens deep routes", async ({ page }) => {
     await page.goto("/");
 
+    await expect(
+      page.locator(".top-navigation .nav-link").filter({ hasText: "/history" }),
+    ).toBeVisible();
+
+    await expect(page.locator(".side-navigation")).toHaveCount(0);
+
     const prompt = await completePrompt(page);
+
+    await expect.poll(() => countSavedPlays(page), { timeout: 10_000 }).toBe(1);
 
     await page.goto("history");
 
@@ -36,6 +67,7 @@ test.describe("Typing Level Zero", () => {
 
     await page.goto("analysis");
     await expect(page.locator("h1")).toHaveText("分析");
+    await expect(page.locator(".side-navigation")).toHaveCount(0);
 
     await page.goto("keys");
     await expect(page.locator("h1")).toHaveText("キー別分析");

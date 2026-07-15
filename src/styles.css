@@ -165,37 +165,6 @@ select:focus-visible {
   min-height: calc(100vh - 76px);
 }
 
-.side-navigation {
-  display: flex;
-  flex: 0 0 88px;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 3rem 0;
-  border-right: 1px solid var(--border);
-}
-
-.side-navigation-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  width: 72px;
-  padding: 0.7rem 0.25rem;
-  border-radius: 10px;
-  color: var(--text-subtle);
-  font-size: 0.65rem;
-  transition:
-    background 160ms ease,
-    color 160ms ease;
-}
-
-.side-navigation-link:hover,
-.side-navigation-link.active {
-  background: var(--surface-muted);
-  color: var(--text);
-}
-
 .main-content {
   width: min(100%, 1440px);
   margin: 0 auto;
@@ -1012,10 +981,6 @@ select:focus-visible {
 
   .nav-link {
     font-size: 0.72rem;
-  }
-
-  .side-navigation {
-    display: none;
   }
 
   .app-body {
