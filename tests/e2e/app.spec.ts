@@ -49,6 +49,13 @@ test.describe("Typing Level Zero", () => {
       page.locator(".top-navigation .nav-link").filter({ hasText: "/history" }),
     ).toBeVisible();
 
+    const githubLink = page.getByRole("link", { name: "GitHubリポジトリを開く" });
+
+    await expect(githubLink).toHaveAttribute("href", "https://github.com/ph0ryn/typing-level-zero");
+    await expect(githubLink).toHaveAttribute("target", "_blank");
+    await expect(githubLink).toHaveAttribute("rel", "noopener noreferrer");
+    await expect(githubLink.locator("img")).toHaveAttribute("src", "/github-mark-black.svg");
+
     const navigationWidths = await page
       .locator(".top-navigation")
       .evaluate((element) =>
@@ -130,6 +137,10 @@ test.describe("Typing Level Zero", () => {
 
     await themeButton.click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+
+    await expect(
+      page.getByRole("link", { name: "GitHubリポジトリを開く" }).locator("img"),
+    ).toHaveAttribute("src", "/github-mark-white.svg");
 
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");

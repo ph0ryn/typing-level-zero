@@ -13,6 +13,7 @@ export function AppLayout() {
   const location = useLocation();
   const isPlayPage = location.pathname === "/" || location.pathname === "";
   const ThemeIcon = theme === "light" ? Moon : Sun;
+  const githubMarkSrc = `${import.meta.env.BASE_URL}github-mark-${theme === "light" ? "black" : "white"}.svg`;
 
   return (
     <div className={`app-shell app-shell-${isPlayPage ? "play" : "dashboard"}`}>
@@ -32,14 +33,25 @@ export function AppLayout() {
             </NavLink>
           ))}
         </nav>
-        <button
-          aria-label={theme === "light" ? "ダークテーマに切り替える" : "ライトテーマに切り替える"}
-          className="icon-button"
-          type="button"
-          onClick={toggleTheme}
-        >
-          <ThemeIcon size={20} strokeWidth={1.8} />
-        </button>
+        <div className="topbar-actions">
+          <button
+            aria-label={theme === "light" ? "ダークテーマに切り替える" : "ライトテーマに切り替える"}
+            className="icon-button"
+            type="button"
+            onClick={toggleTheme}
+          >
+            <ThemeIcon size={20} strokeWidth={1.8} />
+          </button>
+          <a
+            aria-label="GitHubリポジトリを開く"
+            className="icon-button"
+            href="https://github.com/ph0ryn/typing-level-zero"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <img alt="" className="github-mark" src={githubMarkSrc} />
+          </a>
+        </div>
       </header>
 
       <div className="app-body">
