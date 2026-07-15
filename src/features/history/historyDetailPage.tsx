@@ -38,13 +38,12 @@ export function HistoryDetailPage() {
         title="プレイ詳細"
       />
 
-      <section className="metric-grid metric-grid-six">
+      <section className="metric-grid metric-grid-five">
         <MetricCard label="Prompt" value={record.prompt} />
         <MetricCard label="完了時間" value={formatDuration(record.durationMs)} />
         <MetricCard label="正答率" value={formatPercentage(summary.accuracy)} />
         <MetricCard label="Net WPM" value={formatSpeed(summary.netWpm)} />
         <MetricCard label="ミス数" value={`${summary.mistakeCount}`} />
-        <MetricCard label="リセット数" value={`${summary.resetCount}`} />
       </section>
 
       <section className="panel">
@@ -60,7 +59,6 @@ export function HistoryDetailPage() {
                 <th>判定</th>
                 <th>physical code</th>
                 <th>latency</th>
-                <th>reset</th>
               </tr>
             </thead>
             <tbody>
@@ -81,7 +79,6 @@ export function HistoryDetailPage() {
                   </td>
                   <td>{event.physicalCode || "—"}</td>
                   <td>{formatLatency(event.intervalMs)}</td>
-                  <td>{event.resetCount}</td>
                 </tr>
               ))}
             </tbody>

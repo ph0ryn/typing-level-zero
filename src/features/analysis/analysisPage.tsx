@@ -53,7 +53,7 @@ export function AnalysisPage() {
         <EmptyState />
       ) : (
         <>
-          <section className="metric-grid metric-grid-eight" aria-label="全体指標">
+          <section className="metric-grid metric-grid-seven" aria-label="全体指標">
             <MetricCard label="総プレイ数" value={`${overview.totalPlays}`} />
             <MetricCard
               detail={`最速 ${overview.fastestDurationMs === null ? "—" : formatDuration(overview.fastestDurationMs)}`}
@@ -67,7 +67,6 @@ export function AnalysisPage() {
               value={formatSpeed(overview.averageNetWpm)}
             />
             <MetricCard label="総ミス数" value={`${overview.totalMistakes}`} />
-            <MetricCard label="総リセット数" value={`${overview.totalResets}`} />
             <MetricCard label="平均 Gross WPM" value={formatSpeed(overview.averageGrossWpm)} />
             <MetricCard
               detail={`Gross ${formatSpeed(overview.averageGrossCpm)}`}

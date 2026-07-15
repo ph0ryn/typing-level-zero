@@ -48,6 +48,7 @@ test.describe("Typing Level Zero", () => {
     ).toBeVisible();
 
     await expect(page.locator(".side-navigation")).toHaveCount(0);
+    await expect(page.locator(".play-stats")).not.toContainText("リセット");
 
     const promptBeforeResult = await page.locator(".prompt").boundingBox();
     const prompt = await completePrompt(page);
@@ -61,10 +62,12 @@ test.describe("Typing Level Zero", () => {
     await page.goto("history");
 
     await expect(page.locator(".history-table tbody tr")).toHaveCount(1);
+    await expect(page.locator(".history-table")).not.toContainText("リセット");
     await expect(page.locator(".prompt-cell")).toHaveText(prompt);
 
     await page.locator(".history-table .row-link").click();
     await expect(page.locator("h1")).toHaveText("プレイ詳細");
+    await expect(page.locator(".page-history-detail")).not.toContainText("リセット");
     await expect(page.locator(".event-table tbody tr")).toHaveCount(9);
 
     await page.reload();
@@ -72,13 +75,14 @@ test.describe("Typing Level Zero", () => {
 
     await page.goto("analysis");
     await expect(page.locator("h1")).toHaveText("分析");
+    await expect(page.locator(".page-analysis")).not.toContainText("リセット");
     await expect(page.locator(".side-navigation")).toHaveCount(0);
 
     await page.goto("keys");
     await expect(page.locator("h1")).toHaveText("キー別分析");
   });
 
-  test("ignores a wrong first input and resets with Escape", async ({ page }) => {
+  test("ignores a wrong first input and cancels with Escape", async ({ page }) => {
     await page.goto("/");
 
     const prompt = await readPrompt(page);

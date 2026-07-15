@@ -47,7 +47,6 @@ export function HistoryPage() {
                   <th>Net WPM</th>
                   <th>正答率</th>
                   <th>ミス</th>
-                  <th>リセット</th>
                   <th aria-label="詳細" />
                 </tr>
               </thead>
@@ -67,7 +66,6 @@ export function HistoryPage() {
                       <td>{formatSpeed(summary.netWpm)}</td>
                       <td>{formatPercentage(summary.accuracy)}</td>
                       <td>{summary.mistakeCount}</td>
-                      <td>{summary.resetCount}</td>
                       <td>
                         <Link
                           aria-label={`${record.prompt}の詳細`}

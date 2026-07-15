@@ -149,9 +149,6 @@ export function PlayPage() {
       <div className="play-footer">
         <div className="play-stats">
           <span>
-            リセット <strong>{session.resetCount}</strong>
-          </span>
-          <span>
             ミス <strong>{session.mistakeCount}</strong>
           </span>
         </div>
