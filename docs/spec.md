@@ -52,10 +52,10 @@ Typing Level Zeroは、GitHub Pagesで動作する静的なタッチタイピン
 2. promptは`a`から`z`までの小文字ASCIIアルファベットで構成する。
 3. 隣り合う文字は同じにしない。隣り合っていない位置では同じ文字を許可する。
 4. 開始ボタンやSpaceキーを必要としない。
-5. 最初のアルファベットキー入力でplayのタイマーを開始し、その入力自体も判定対象とする。
+5. 最初のアルファベットキー入力でplayを開始する。その入力はゲーム上のcursor更新には使うが、分析上は完全に無視する。
 6. アルファベットの入力は大文字・小文字を区別しない。たとえば、期待値が`a`のとき`A`も正解とする。
 7. 正しい入力ではcursorを1つ進める。
-8. 間違った入力ではミスを記録し、reset回数を増やし、同じpromptを維持したままcursorを0へ戻す。
+8. 2回目以降の間違った入力ではミスを記録し、reset回数を増やし、同じpromptを維持したままcursorを0へ戻す。playの最初の入力が間違っていた場合は、ミスやresetとして扱わず、cursorを変更しない。
 9. resetではplayを終了しない。promptを完了するか、playをキャンセルするまで継続できる。
 10. 10文字すべての入力が完了したら現在のplayを終了し、結果を保存して、即座に新しい10文字のpromptへ差し替える。
 11. 次のplayはpromptを表示した待機状態になり、次のアルファベットキー入力で開始する。
@@ -108,7 +108,7 @@ interface PlayRecord {
 interface InputEventRecord {
   sequence: number;
   timestampMs: number;
-  intervalMs: number;
+  intervalMs: number | null;
   positionBefore: number;
   positionAfter: number;
   expectedKey: string;
@@ -122,6 +122,8 @@ interface InputEventRecord {
 実際のTypeScript型では、より狭い型やreadonlyプロパティを使用してよい。ただし保存情報はこの構造と同等にする。
 
 アルファベット入力の`actualKey`は分析用に小文字へ正規化する。一方、`physicalCode`はブラウザのキーボードコードを保持する。これにより、論理キーのミスと物理キーボード上の位置を区別して分析できる。
+
+playの最初のアルファベット入力は`events`に保存しない。`summary.totalInputs`にだけ含め、正解数、ミス数、reset数、正答率、速度、latencyには含めない。最初の入力後に保存される最初のイベントの`intervalMs`は`null`とし、直前の保存済み入力が存在しないイベントとして扱う。
 
 ### 全体分析ページ
 
@@ -172,16 +174,25 @@ interface InputEventRecord {
 
 ## 指標の定義
 
-- **Duration**: 最初のアルファベット入力から、10文字目を正しく入力するまでの時間
+- **Duration**: 分析対象として保存される最初の入力から、10文字目を正しく入力するまでの時間
 - **Accuracy**: 正しいアルファベット入力数を、判定対象となったアルファベット入力総数で割った値
 - **CPM**: playの時間と対象入力数から算出する1分あたりの文字数
 - **WPM**: 5文字を1単語として算出する1分あたりの単語数
 - **Gross speed**: ミスを含むすべての判定対象入力から算出した速度
 - **Net speed**: 記録されたミス数に応じてGross speedを減算調整した速度
-- **Key latency**: 現在の入力イベントと直前の入力イベントとの時間差
+- **Key latency**: 現在の入力イベントと直前の保存済み入力イベントとの時間差。playの最初の入力イベントは対象外とする
 - **Reset count**: cursorを0へ戻したミスの回数
 
 指標の計算式は、練習画面の結果表示と分析ページで統一する。計測時間が0の場合は、無限大や`NaN`を表示しない。
+
+### 最初の入力の扱い
+
+- 各playの最初のアルファベット入力は、playを開始するための入力として扱う。
+- 最初の入力がpromptの先頭文字と一致した場合はcursorを1つ進めるが、分析用データには保存しない。
+- 最初の入力が間違っていた場合は、入力回数にだけ含める。ミス、reset、latency、速度には含めず、cursorも変更しない。
+- 最初の入力は、正誤に関係なく`summary.totalInputs`へ1回分だけ加算する。
+- 最初の入力後に行われる入力だけを分析対象として保存する。
+- reset後の入力イベントは、直前の保存済み入力イベントからの時間を計測する。
 
 ## IndexedDB設計制約
 
@@ -207,7 +218,7 @@ interface InputEventRecord {
 - 間違った入力がエラーとして表示され、同じpromptの1文字目へ戻る。
 - 10文字を完了すると、IndexedDBにplayレコードが1件だけ保存される。
 - 完了直後に新しいpromptが表示される。
-- 各playにキー、期待値、位置、physical code、正誤、時間の生データが含まれる。
+- 各playに、最初の入力を除いたキー、期待値、位置、physical code、正誤、時間の生データが含まれる。`summary.totalInputs`だけは最初の入力を含むため、保存された`events`の件数と一致しない場合がある。
 - `/analysis`にIndexedDB由来の全体集計、位置別、推移、play別の情報が表示される。
 - `/keys`に苦手キー・得意キーのランキングと、キーごとの誤入力先の情報が表示される。
 - `/keys`で任意のキーを選択すると、そのキーの入力回数、正答率、latency、誤入力先、成績推移を確認できる。
