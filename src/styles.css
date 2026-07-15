@@ -142,7 +142,7 @@ select:focus-visible {
 .nav-link.active::after {
   position: absolute;
   right: 0;
-  bottom: 5px;
+  bottom: 0;
   left: 0;
   height: 2px;
   background: var(--text);

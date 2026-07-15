@@ -63,7 +63,7 @@ test.describe("Typing Level Zero", () => {
       .locator(".nav-link.active")
       .evaluate((element) => getComputedStyle(element, "::after").bottom);
 
-    expect(activeUnderlineBottom).toBe("5px");
+    expect(activeUnderlineBottom).toBe("0px");
 
     await expect(page.locator(".side-navigation")).toHaveCount(0);
     await expect(page.locator(".play-stats")).not.toContainText("リセット");
