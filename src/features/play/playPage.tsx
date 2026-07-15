@@ -109,7 +109,7 @@ export function PlayPage() {
   return (
     <div className="play-page">
       <div className="play-stage">
-        <p className="play-kicker">10文字を入力して集中する</p>
+        <p className="play-kicker">集中して10文字を入力する</p>
         <div className="prompt" aria-label={`入力する文字列 ${session.prompt}`}>
           {session.prompt.split("").map((character, index) => {
             let state = "pending";

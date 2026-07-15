@@ -43,6 +43,8 @@ test.describe("Typing Level Zero", () => {
   test("completes a play, persists history, and opens deep routes", async ({ page }) => {
     await page.goto("/");
 
+    await expect(page.locator(".play-kicker")).toHaveText("集中して10文字を入力する");
+
     await expect(
       page.locator(".top-navigation .nav-link").filter({ hasText: "/history" }),
     ).toBeVisible();
