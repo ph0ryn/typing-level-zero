@@ -79,6 +79,7 @@ test.describe("Typing Level Zero", () => {
     await page.goto("analysis");
     await expect(page.locator("h1")).toHaveText("分析");
     await expect(page.locator(".page-analysis")).not.toContainText("リセット");
+    await expect(page.locator(".page-analysis .page-intro-action")).toHaveCount(0);
     await expect(page.locator(".side-navigation")).toHaveCount(0);
 
     await page.goto("keys");

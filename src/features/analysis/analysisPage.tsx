@@ -34,16 +34,6 @@ export function AnalysisPage() {
   return (
     <div className="page page-analysis">
       <PageIntro
-        action={
-          <div className="page-actions">
-            <Link className="button button-quiet" to="/keys">
-              キー別分析
-            </Link>
-            <Link className="button button-dark" to="/history">
-              プレイ履歴
-            </Link>
-          </div>
-        }
         description="これまでの入力から、速度・正確性・苦手な位置を振り返ります。"
         eyebrow="概要"
         title="分析"
