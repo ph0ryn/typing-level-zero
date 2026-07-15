@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build && node scripts/copyNotFoundPage.mjs",
+    "build": "vite build",
     "dev": "vite",
     "fix": "oxlint --type-aware --type-check --fix && pnpm run format",
     "format": "oxfmt",

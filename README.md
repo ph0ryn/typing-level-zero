@@ -23,8 +23,7 @@ Start the Vite development server:
 pnpm run dev
 ```
 
-The application is served under `/typing-level-zero/` to match its GitHub
-Pages deployment path.
+The application is served from the site root.
 
 Build and preview the production bundle:
 
@@ -33,8 +32,8 @@ pnpm run build
 pnpm run preview
 ```
 
-The build copies `dist/index.html` to `dist/404.html`, allowing GitHub Pages
-to fall back to the single-page application entry point for deep links.
+The production bundle does not include a top-level `404.html`, so Cloudflare
+Pages uses its default single-page application fallback for deep links.
 
 ## Checks
 
@@ -52,6 +51,16 @@ tests against a production preview server. Tests are expected under
 
 ## Deployment
 
-The workflow in `.github/workflows/deploy.yml` builds and publishes the site to
-GitHub Pages whenever `main` is updated. Enable GitHub Pages for the
-repository with **GitHub Actions** as the deployment source.
+Connect this repository to a Cloudflare Pages project with the following build
+settings:
+
+| Setting                | Value                     |
+| ---------------------- | ------------------------- |
+| Production branch      | `main`                    |
+| Build command          | `pnpm run build`          |
+| Build output directory | `dist`                    |
+| Root directory         | Not set (repository root) |
+| Environment variable   | `PNPM_VERSION=11.1.1`     |
+
+Cloudflare Pages deploys updates to `main` to production and creates preview
+deployments for other branches through its Git integration.

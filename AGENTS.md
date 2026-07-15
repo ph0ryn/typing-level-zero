@@ -4,7 +4,7 @@
 
 This repository contains a static, local-first touch typing application. The
 application uses React and Vite, stores completed plays in IndexedDB, and is
-deployed as a static bundle to GitHub Pages.
+deployed as a static bundle to Cloudflare Pages.
 
 Keep the application client-side and generic. Do not add accounts, server-side
 storage, external APIs, or framework-specific runtime services without an
@@ -17,7 +17,7 @@ explicit requirement.
 - Module system: ESM with `"type": "module"`.
 - TypeScript is configured as strict and `noEmit`.
 - Application: React and Vite.
-- Routing: React Router with the `/typing-level-zero/` GitHub Pages base path.
+- Routing: React Router from the Cloudflare Pages site root.
 - Formatting: oxfmt.
 - Linting and type checking: Oxlint, with ESLint for TypeScript naming rules.
 - Unit tests: Vitest and Testing Library under `tests/unit`.
@@ -46,8 +46,8 @@ Run all commands from the repository root.
 - Keep source code, comments, commit messages, and repository documentation in
   English.
 - Preserve pnpm workspace catalog usage when updating dependencies.
-- Keep the GitHub Pages base path and `dist/404.html` fallback intact unless
-  the deployment strategy changes deliberately.
+- Keep the Cloudflare Pages root base path and default SPA fallback intact
+  unless the deployment strategy changes deliberately.
 - Prefer small, direct changes over new abstractions.
 - Keep application data local to the browser unless the requirements change.
 

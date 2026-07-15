@@ -6,7 +6,7 @@
 
 ## 背景
 
-Typing Level Zeroは、GitHub Pagesで動作する静的なタッチタイピング練習アプリである。アカウント、サーバー、外部APIを必要とせず、集中して練習できる入力画面と、ローカルデータを使った分析画面を提供する。
+Typing Level Zeroは、Cloudflare Pagesで動作する静的なタッチタイピング練習アプリである。アカウント、サーバー、外部APIを必要とせず、集中して練習できる入力画面と、ローカルデータを使った分析画面を提供する。
 
 ## 目的
 
@@ -25,7 +25,7 @@ Typing Level Zeroは、GitHub Pagesで動作する静的なタッチタイピン
 - `/analysis` に配置する全体分析ページ
 - `/keys` に配置するキー別分析ページ
 - `/history` に配置するplay履歴ページ
-- GitHub ActionsによるGitHub Pagesへの静的デプロイ
+- Cloudflare PagesのGit連携による静的デプロイ
 
 ## 対象外
 
@@ -216,9 +216,9 @@ playの最初のアルファベット入力は`events`に保存しない。`summ
 ## デプロイ要件
 
 - アプリは静的なViteバンドルとしてビルドする。
-- リポジトリ名以下で配信されるGitHub Pagesのベースパスに対応する。
-- 指定ブランチからビルドしてGitHub PagesへデプロイするGitHub Actionsワークフローを用意する。
-- `/analysis`、`/keys`、`/history`のすべてをGitHub Pages上から開けるようにする。
+- Cloudflare Pagesのサイトルートから配信する。
+- 指定ブランチをビルドしてCloudflare PagesへデプロイするGit連携を使用する。
+- `/analysis`、`/keys`、`/history`のすべてをCloudflare PagesのSPAフォールバック経由で直接開けるようにする。
 
 ## 受け入れ条件
 
@@ -235,7 +235,7 @@ playの最初のアルファベット入力は`events`に保存しない。`summ
 - `/history`に完了したplayの履歴が新しい順で表示される。
 - `/history`で任意のplayを選択すると、そのplayの詳細を確認できる。
 - ページを再読み込みしても、完了済みplayの履歴が保持される。
-- GitHub Pagesのリポジトリベースパス配下でアプリが動作する。
+- Cloudflare Pagesのサイトルートでアプリが動作する。
 
 ## 未決定事項
 
