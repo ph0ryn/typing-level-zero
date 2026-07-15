@@ -179,4 +179,37 @@ test.describe("Typing Level Zero", () => {
 
     expect(new Set(navigationWidths).size).toBe(1);
   });
+
+  test("keeps the play page within the viewport after a result appears", async ({ page }) => {
+    for (const viewport of [
+      { height: 320, width: 568 },
+      { height: 400, width: 1280 },
+      { height: 568, width: 320 },
+      { height: 844, width: 390 },
+      { height: 600, width: 768 },
+      { height: 720, width: 1280 },
+    ]) {
+      await page.setViewportSize(viewport);
+      await page.goto("/");
+      await completePrompt(page);
+
+      const dimensions = await page.locator("main").evaluate((element) => ({
+        documentHeight: document.documentElement.scrollHeight,
+        documentWidth: document.documentElement.scrollWidth,
+        mainClientHeight: element.clientHeight,
+        mainClientWidth: element.clientWidth,
+        mainOverflow: getComputedStyle(element).overflow,
+        mainScrollHeight: element.scrollHeight,
+        mainScrollWidth: element.scrollWidth,
+        viewportHeight: window.innerHeight,
+        viewportWidth: window.innerWidth,
+      }));
+
+      expect(dimensions.documentHeight).toBe(dimensions.viewportHeight);
+      expect(dimensions.documentWidth).toBeLessThanOrEqual(dimensions.viewportWidth);
+      expect(dimensions.mainScrollHeight).toBe(dimensions.mainClientHeight);
+      expect(dimensions.mainScrollWidth).toBe(dimensions.mainClientWidth);
+      expect(dimensions.mainOverflow).toBe("hidden");
+    }
+  });
 });

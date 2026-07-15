@@ -98,6 +98,20 @@ select:focus-visible {
   min-height: 100vh;
 }
 
+.app-shell-play {
+  --topbar-height: 76px;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.app-shell-play .app-body {
+  height: calc(100vh - var(--topbar-height));
+  height: calc(100dvh - var(--topbar-height));
+  min-height: 0;
+}
+
 .topbar {
   display: flex;
   align-items: center;
@@ -179,6 +193,9 @@ select:focus-visible {
 }
 
 .app-shell-play .main-content {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
   width: 100%;
   padding: 0;
 }
@@ -809,7 +826,10 @@ select:focus-visible {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: calc(100vh - 76px);
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
   padding: clamp(2rem, 8vw, 7rem) clamp(1.2rem, 7vw, 7rem) 2rem;
 }
 
@@ -819,6 +839,7 @@ select:focus-visible {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-height: 0;
   padding-bottom: 5rem;
 }
 
@@ -967,6 +988,15 @@ select:focus-visible {
   margin: 1.25rem auto 0;
 }
 
+.app-shell-play .save-retry {
+  position: absolute;
+  right: clamp(1.2rem, 7vw, 7rem);
+  bottom: 4.5rem;
+  left: clamp(1.2rem, 7vw, 7rem);
+  z-index: 1;
+  margin: 0;
+}
+
 @media (max-width: 1100px) {
   .metric-grid-eight {
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1008,6 +1038,10 @@ select:focus-visible {
 
   .app-body {
     min-height: calc(100vh - 66px);
+  }
+
+  .app-shell-play {
+    --topbar-height: 66px;
   }
 
   .main-content {
@@ -1057,7 +1091,6 @@ select:focus-visible {
   }
 
   .play-page {
-    min-height: calc(100vh - 66px);
     padding: 2rem 1rem 1.5rem;
   }
 
@@ -1082,12 +1115,18 @@ select:focus-visible {
   }
 
   .result-panel-slot {
-    min-height: 145px;
+    min-height: 105px;
     margin-top: 1rem;
   }
 
   .result-panel > :first-child {
     grid-column: span 2;
+  }
+
+  .app-shell-play .save-retry {
+    right: 1rem;
+    bottom: 4rem;
+    left: 1rem;
   }
 }
 
@@ -1140,6 +1179,80 @@ select:focus-visible {
 
   .play-stats {
     gap: 0.8rem;
+  }
+}
+
+@media (max-height: 500px) {
+  .play-page {
+    padding: 0.75rem 1rem 0.5rem;
+  }
+
+  .play-stage {
+    padding-bottom: 0;
+  }
+
+  .play-kicker {
+    margin-bottom: 0.5rem !important;
+  }
+
+  .prompt {
+    min-height: 64px;
+    font-size: clamp(1.6rem, 8vw, 3rem);
+  }
+
+  .prompt-progress {
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+  }
+
+  .play-hint {
+    margin-top: 0.6rem;
+    font-size: 0.68rem;
+  }
+
+  .result-panel-slot {
+    min-height: 105px;
+    margin-top: 0.5rem;
+  }
+}
+
+@media (max-width: 460px), (max-height: 500px) {
+  .result-panel {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .result-panel > :first-child {
+    grid-column: auto;
+  }
+
+  .result-panel h2 {
+    font-size: 1.1rem;
+  }
+
+  .result-stat strong {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-height: 360px) {
+  .play-page {
+    padding: 0.5rem 1rem 0.35rem;
+  }
+
+  .prompt {
+    min-height: 56px;
+    font-size: clamp(1.5rem, 8vw, 2.5rem);
+  }
+
+  .play-hint {
+    display: none;
+  }
+
+  .result-panel-slot {
+    min-height: 91px;
   }
 }
 
