@@ -9,6 +9,10 @@ export default defineConfig(
   {
     files: ["src/**/*.ts"],
     languageOptions: {
+      globals: {
+        document: "readonly",
+        window: "readonly",
+      },
       parser: tseslint.parser,
       parserOptions: {
         projectService: true,

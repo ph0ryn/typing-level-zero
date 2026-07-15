@@ -1,62 +1,67 @@
-# ts-base Agent Guide
+# Typing Level Zero Agent Guide
 
 ## Repository Purpose
 
-This repository is a reusable TypeScript template. Treat changes as template
-maintenance unless the user explicitly asks to turn it into a concrete project.
+This repository contains a static, local-first touch typing application. The
+application uses React and Vite, stores completed plays in IndexedDB, and is
+deployed as a static bundle to GitHub Pages.
 
-Keep the template small, generic, and easy to fork. Do not add app-specific
-frameworks, runtime assumptions, build pipelines, or documentation unless the
-request specifically needs them.
+Keep the application client-side and generic. Do not add accounts, server-side
+storage, external APIs, or framework-specific runtime services without an
+explicit requirement.
 
 ## Tooling
 
 - Package manager: pnpm only. Do not use npm or yarn.
-- Runtime target: Bun-compatible ESM.
+- Runtime target: browser ESM with a Bun-compatible TypeScript toolchain.
 - Module system: ESM with `"type": "module"`.
 - TypeScript is configured as strict and `noEmit`.
-- Linting and type checking are primarily handled by Oxlint, with ESLint used
-  for TypeScript naming rules and autofix support.
-- Formatting is handled by oxfmt.
+- Application: React and Vite.
+- Routing: React Router with the `/typing-level-zero/` GitHub Pages base path.
+- Formatting: oxfmt.
+- Linting and type checking: Oxlint, with ESLint for TypeScript naming rules.
+- Unit tests: Vitest and Testing Library under `tests/unit`.
+- E2E tests: Playwright under `tests/e2e`.
 - Git hooks are configured automatically during `postinstall`.
 
 ## Common Commands
 
 Run all commands from the repository root.
 
-| Task                 | Command           |
-| -------------------- | ----------------- |
-| Install dependencies | `pnpm install`    |
-| Lint                 | `pnpm run lint`   |
-| Format               | `pnpm run format` |
-| Autofix              | `pnpm run fix`    |
-
-There is currently no `test`, `build`, or separate `typecheck` script.
-`pnpm run lint` already runs Oxlint with `--type-aware --type-check`. Check
-`package.json` before adding or running new lifecycle commands.
+| Task                      | Command              |
+| ------------------------- | -------------------- |
+| Install dependencies      | `pnpm install`       |
+| Start development         | `pnpm run dev`       |
+| Build production assets   | `pnpm run build`     |
+| Preview production assets | `pnpm run preview`   |
+| Format                    | `pnpm run format`    |
+| Autofix                   | `pnpm run fix`       |
+| Lint and type check       | `pnpm run lint`      |
+| Unit tests                | `pnpm run test:unit` |
+| E2E tests                 | `pnpm run test:e2e`  |
+| All tests                 | `pnpm run test`      |
 
 ## Editing Rules
 
-- Keep external code, comments, commit messages, and repository documentation in
+- Keep source code, comments, commit messages, and repository documentation in
   English.
-- Preserve pnpm workspace catalog usage in `pnpm-workspace.yaml` when updating
-  dependencies.
+- Preserve pnpm workspace catalog usage when updating dependencies.
+- Keep the GitHub Pages base path and `dist/404.html` fallback intact unless
+  the deployment strategy changes deliberately.
 - Prefer small, direct changes over new abstractions.
-- Do not add dependencies for documentation-only or housekeeping changes.
-- Do not widen the template into a framework starter unless explicitly asked.
-- Keep generated-project instructions in `README.md`; keep agent workflow notes
-  in this file.
+- Keep application data local to the browser unless the requirements change.
 
 ## Validation
 
-For repository changes, run the narrowest relevant checks first. For normal
-template maintenance, use:
+Before completing repository changes, run the relevant format, lint, test, and
+build checks:
 
 ```sh
 pnpm run format
 pnpm run lint
+pnpm run test:unit
+pnpm run test:e2e
+pnpm run build
 ```
 
-If a requested change adds a new script, runtime path, test framework, or build
-step, update both `README.md` and this guide so future agents do not rely on
-stale commands.
+If a check cannot run, report the reason and the unverified scope explicitly.

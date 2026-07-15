@@ -14,6 +14,7 @@ export default defineConfig({
     suspicious: "off",
   },
   env: {
+    browser: true,
     node: true,
   },
   ignorePatterns: ["dist/**", "node_modules/**"],
@@ -31,6 +32,7 @@ export default defineConfig({
     "max-statements": "off",
     "no-inferrable-types": "off",
     "no-magic-numbers": "off",
+    "no-ternary": "off",
     "prefer-destructuring": "off",
     "sort-imports": "off",
 
