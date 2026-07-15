@@ -146,17 +146,6 @@ export function PlayPage() {
         </p>
       </div>
 
-      <div className="play-footer">
-        <div className="play-stats">
-          <span>
-            ミス <strong>{session.mistakeCount}</strong>
-          </span>
-        </div>
-        <time className="play-timer" dateTime={`${durationMs}`}>
-          {formatDuration(durationMs)}
-        </time>
-      </div>
-
       <div className="result-panel-slot">
         {lastResult ? (
           <section className="result-panel" aria-live="polite">
@@ -178,6 +167,17 @@ export function PlayPage() {
             </div>
           </section>
         ) : null}
+      </div>
+
+      <div className="play-footer">
+        <div className="play-stats">
+          <span>
+            ミス <strong>{session.mistakeCount}</strong>
+          </span>
+        </div>
+        <time className="play-timer" dateTime={`${durationMs}`}>
+          {formatDuration(durationMs)}
+        </time>
       </div>
 
       {pendingRecord && saveError ? (
