@@ -160,26 +160,28 @@ export function PlayPage() {
         </time>
       </div>
 
-      {lastResult ? (
-        <section className="result-panel" aria-live="polite">
-          <div>
-            <p className="eyebrow">完了</p>
-            <h2>{formatDuration(lastResult.durationMs)}</h2>
-          </div>
-          <div className="result-stat">
-            <span>正答率</span>
-            <strong>{formatPercentage(lastResult.summary.accuracy)}</strong>
-          </div>
-          <div className="result-stat">
-            <span>Net WPM</span>
-            <strong>{formatSpeed(lastResult.summary.netWpm)}</strong>
-          </div>
-          <div className="result-stat">
-            <span>ミス</span>
-            <strong>{lastResult.summary.mistakeCount}</strong>
-          </div>
-        </section>
-      ) : null}
+      <div className="result-panel-slot">
+        {lastResult ? (
+          <section className="result-panel" aria-live="polite">
+            <div>
+              <p className="eyebrow">完了</p>
+              <h2>{formatDuration(lastResult.durationMs)}</h2>
+            </div>
+            <div className="result-stat">
+              <span>正答率</span>
+              <strong>{formatPercentage(lastResult.summary.accuracy)}</strong>
+            </div>
+            <div className="result-stat">
+              <span>Net WPM</span>
+              <strong>{formatSpeed(lastResult.summary.netWpm)}</strong>
+            </div>
+            <div className="result-stat">
+              <span>ミス</span>
+              <strong>{lastResult.summary.mistakeCount}</strong>
+            </div>
+          </section>
+        ) : null}
+      </div>
 
       {pendingRecord && saveError ? (
         <section className="save-retry" role="alert">

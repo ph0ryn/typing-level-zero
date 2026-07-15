@@ -49,7 +49,12 @@ test.describe("Typing Level Zero", () => {
 
     await expect(page.locator(".side-navigation")).toHaveCount(0);
 
+    const promptBeforeResult = await page.locator(".prompt").boundingBox();
     const prompt = await completePrompt(page);
+
+    const promptAfterResult = await page.locator(".prompt").boundingBox();
+
+    expect(Math.abs((promptAfterResult?.y ?? 0) - (promptBeforeResult?.y ?? 0))).toBeLessThan(1);
 
     await expect.poll(() => countSavedPlays(page), { timeout: 10_000 }).toBe(1);
 

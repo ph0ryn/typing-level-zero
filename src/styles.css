@@ -909,12 +909,18 @@ select:focus-visible {
   font-size: 1rem;
 }
 
+.result-panel-slot {
+  width: 100%;
+  min-height: 130px;
+  margin-top: 1.5rem;
+}
+
 .result-panel {
   display: flex;
   align-items: center;
   gap: clamp(1.4rem, 4vw, 4rem);
   max-width: 720px;
-  margin: 1.5rem auto 0;
+  margin: 0 auto;
   padding: 1rem 1.25rem;
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -1055,6 +1061,11 @@ select:focus-visible {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.8rem 1rem;
+  }
+
+  .result-panel-slot {
+    min-height: 145px;
+    margin-top: 1rem;
   }
 
   .result-panel > :first-child {
