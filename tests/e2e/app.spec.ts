@@ -47,6 +47,16 @@ test.describe("Typing Level Zero", () => {
       page.locator(".top-navigation .nav-link").filter({ hasText: "/history" }),
     ).toBeVisible();
 
+    const navigationWidths = await page
+      .locator(".top-navigation")
+      .evaluate((element) =>
+        Array.from(element.querySelectorAll(".nav-link"), (link) =>
+          Math.round(link.getBoundingClientRect().width),
+        ),
+      );
+
+    expect(new Set(navigationWidths).size).toBe(1);
+
     await expect(page.locator(".side-navigation")).toHaveCount(0);
     await expect(page.locator(".play-stats")).not.toContainText("リセット");
 
@@ -145,5 +155,20 @@ test.describe("Typing Level Zero", () => {
 
     expect(positions[1]).toEqual(positions[0]);
     expect(positions[2]).toEqual(positions[0]);
+  });
+
+  test("uses equal navigation hit areas on narrow screens", async ({ page }) => {
+    await page.setViewportSize({ height: 928, width: 598 });
+    await page.goto("/");
+
+    const navigationWidths = await page
+      .locator(".top-navigation")
+      .evaluate((element) =>
+        Array.from(element.querySelectorAll(".nav-link"), (link) =>
+          Math.round(link.getBoundingClientRect().width),
+        ),
+      );
+
+    expect(new Set(navigationWidths).size).toBe(1);
   });
 });
