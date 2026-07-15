@@ -23,10 +23,13 @@
   --success: #526b55;
   --danger: #9e4c4c;
   --chart-grid: #e2e2dd;
-  --heatmap-high: #deded9;
-  --heatmap-medium: #efefec;
-  --heatmap-low: #b9b9b3;
+  --heatmap-light: #ffffff;
+  --heatmap-dark: #171717;
+  --heatmap-gradient-start: var(--heatmap-dark);
+  --heatmap-gradient-end: var(--heatmap-light);
   --heatmap-no-data: #f6f6f3;
+  --heatmap-light-text: #f8f8f6;
+  --heatmap-dark-text: #171717;
 }
 
 :root[data-theme="dark"] {
@@ -44,10 +47,13 @@
   --success: #9fc4a4;
   --danger: #e08b8b;
   --chart-grid: #373b37;
-  --heatmap-high: #545a54;
-  --heatmap-medium: #3e433f;
-  --heatmap-low: #2f332f;
+  --heatmap-light: #f1f1ed;
+  --heatmap-dark: #171817;
+  --heatmap-gradient-start: var(--heatmap-light);
+  --heatmap-gradient-end: var(--heatmap-dark);
   --heatmap-no-data: #252725;
+  --heatmap-light-text: #f1f1ed;
+  --heatmap-dark-text: #171817;
 }
 
 * {
@@ -620,24 +626,31 @@ select:focus-visible {
 }
 
 .keyboard-map {
+  --keyboard-key-gap: clamp(0.25rem, 0.75vw, 0.65rem);
+  --keyboard-key-width: clamp(42px, 6.4vw, 84px);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  align-items: center;
+  align-items: flex-start;
+  width: min(100%, calc(var(--keyboard-key-width) * 10 + var(--keyboard-key-gap) * 9));
+  margin-inline: auto;
   padding: 1rem 0 0.75rem;
 }
 
 .keyboard-row {
   display: flex;
-  gap: clamp(0.25rem, 0.75vw, 0.65rem);
+  width: 100%;
+  gap: var(--keyboard-key-gap);
 }
 
 .keyboard-row-2 {
-  margin-left: 4%;
+  width: calc(100% - ((100% + var(--keyboard-key-gap)) / 10));
+  margin-left: calc((100% + var(--keyboard-key-gap)) / 40);
 }
 
 .keyboard-row-3 {
-  margin-left: 9%;
+  width: calc(100% - (3 * (100% + var(--keyboard-key-gap)) / 10));
+  margin-left: calc(3 * (100% + var(--keyboard-key-gap)) / 40);
 }
 
 .heatmap-key {
@@ -645,11 +658,16 @@ select:focus-visible {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: clamp(42px, 6.4vw, 84px);
+  flex: 1 1 0;
+  min-width: 0;
   height: clamp(50px, 6.5vw, 78px);
   border: 1px solid var(--border-strong);
   border-radius: 8px;
-  color: var(--text);
+  --heatmap-background-tone: var(--heatmap-tone);
+  background: rgb(
+    var(--heatmap-background-tone) var(--heatmap-background-tone) var(--heatmap-background-tone)
+  );
+  color: var(--heatmap-dark-text);
   transition:
     transform 160ms ease,
     border-color 160ms ease;
@@ -666,28 +684,38 @@ select:focus-visible {
 
 .heatmap-key span {
   margin-top: 0.25rem;
-  color: var(--text-muted);
+  color: inherit;
   font-size: clamp(0.58rem, 1vw, 0.7rem);
+  opacity: 0.72;
 }
 
-.heatmap-key.high,
-.legend-swatch.high {
-  background: var(--heatmap-high);
+.heatmap-key.light-text {
+  color: var(--heatmap-light-text);
 }
 
-.heatmap-key.medium,
-.legend-swatch.medium {
-  background: var(--heatmap-medium);
+.heatmap-key.dark-text {
+  color: var(--heatmap-dark-text);
 }
 
-.heatmap-key.low,
-.legend-swatch.low {
-  background: var(--heatmap-low);
+:root[data-theme="dark"] .heatmap-key {
+  --heatmap-background-tone: calc(255 - var(--heatmap-tone));
+}
+
+:root[data-theme="dark"] .heatmap-key.light-text {
+  color: var(--heatmap-dark-text);
+}
+
+:root[data-theme="dark"] .heatmap-key.dark-text {
+  color: var(--heatmap-light-text);
 }
 
 .heatmap-key.no-data,
 .legend-swatch.no-data {
   background: var(--heatmap-no-data);
+}
+
+.heatmap-key.no-data {
+  color: var(--text);
 }
 
 .heatmap-legend {
@@ -703,6 +731,15 @@ select:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+}
+
+.legend-gradient {
+  display: inline-block;
+  width: clamp(90px, 14vw, 160px);
+  height: 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--heatmap-gradient-start), var(--heatmap-gradient-end));
 }
 
 .legend-swatch {
@@ -1163,19 +1200,15 @@ select:focus-visible {
   }
 
   .keyboard-row {
-    gap: 0.18rem;
+    gap: var(--keyboard-key-gap);
   }
 
-  .keyboard-row-2 {
-    margin-left: 2%;
-  }
-
-  .keyboard-row-3 {
-    margin-left: 5%;
+  .keyboard-map {
+    --keyboard-key-gap: 0.18rem;
+    --keyboard-key-width: clamp(27px, 8.6vw, 42px);
   }
 
   .heatmap-key {
-    width: clamp(27px, 8.6vw, 42px);
     height: 46px;
     border-radius: 5px;
   }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { type CSSProperties, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { deriveAnalytics } from "../../shared/domain/analytics.ts";
@@ -48,20 +48,32 @@ function metricValue(metrics: KeyMetrics, metric: HeatmapMetric): string {
   return `${metrics.mistakeCount}`;
 }
 
-function heatmapClass(metrics: KeyMetrics): string {
+type HeatmapKeyStyle = CSSProperties & { "--heatmap-tone": string };
+
+function heatmapTone(metrics: KeyMetrics): number | null {
   if (metrics.inputCount === 0) {
+    return null;
+  }
+
+  const accuracy = Math.min(Math.max(metrics.accuracy, 0), 1);
+
+  return Math.round(Math.max(0, (accuracy - 0.7) / 0.3) * 255);
+}
+
+function heatmapClass(metrics: KeyMetrics): string {
+  const tone = heatmapTone(metrics);
+
+  if (tone === null) {
     return "heatmap-key no-data";
   }
 
-  if (metrics.accuracy >= 0.9) {
-    return "heatmap-key high";
-  }
+  return `heatmap-key ${tone < 150 ? "light-text" : "dark-text"}`;
+}
 
-  if (metrics.accuracy >= 0.8) {
-    return "heatmap-key medium";
-  }
+function heatmapStyle(metrics: KeyMetrics): HeatmapKeyStyle {
+  const tone = heatmapTone(metrics) ?? 255;
 
-  return "heatmap-key low";
+  return { "--heatmap-tone": `${tone}` };
 }
 
 function RankingList({
@@ -173,7 +185,12 @@ export function KeysPage() {
                 }
 
                 return (
-                  <Link className={heatmapClass(metrics)} key={key} to={`/keys/${key}`}>
+                  <Link
+                    className={heatmapClass(metrics)}
+                    key={key}
+                    style={heatmapStyle(metrics)}
+                    to={`/keys/${key}`}
+                  >
                     <strong>{key.toUpperCase()}</strong>
                     <span>{metricValue(metrics, heatmapMetric)}</span>
                   </Link>
@@ -183,18 +200,9 @@ export function KeysPage() {
           ))}
         </div>
         <div className="heatmap-legend" aria-label="正答率の凡例">
-          <span>
-            <i className="legend-swatch high" />
-            90%以上
-          </span>
-          <span>
-            <i className="legend-swatch medium" />
-            80–90%
-          </span>
-          <span>
-            <i className="legend-swatch low" />
-            80%未満
-          </span>
+          <span>70%</span>
+          <i aria-hidden="true" className="legend-gradient" />
+          <span>100%</span>
           <span>
             <i className="legend-swatch no-data" />
             データなし
