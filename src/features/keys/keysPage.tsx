@@ -4,6 +4,11 @@ import { Link } from "react-router-dom";
 import { deriveAnalytics } from "../../shared/domain/analytics.ts";
 import { useRecords } from "../../shared/storage/recordsContext.tsx";
 import {
+  AnalyticsScopeSelect,
+  filterRecordsByAnalyticsScope,
+  useAnalyticsScope,
+} from "../../shared/ui/analyticsScopeContext.tsx";
+import {
   EmptyState,
   LoadingState,
   PageIntro,
@@ -178,8 +183,13 @@ function RankingList({
 
 export function KeysPage() {
   const { isLoading, records } = useRecords();
+  const { scope } = useAnalyticsScope();
   const [heatmapMetric, setHeatmapMetric] = useState<HeatmapMetric>("latency");
-  const analytics = useMemo(() => deriveAnalytics(records), [records]);
+  const filteredRecords = useMemo(
+    () => filterRecordsByAnalyticsScope(records, scope),
+    [records, scope],
+  );
+  const analytics = useMemo(() => deriveAnalytics(filteredRecords), [filteredRecords]);
 
   if (isLoading) {
     return <LoadingState />;
@@ -220,6 +230,7 @@ export function KeysPage() {
   return (
     <div className="page page-keys">
       <PageIntro
+        action={<AnalyticsScopeSelect />}
         description="期待したキーごとの正確性と入力の癖を確認します。"
         eyebrow="キー分析"
         title="キー別分析"
@@ -283,8 +294,11 @@ export function KeysPage() {
         </div>
       </section>
 
-      {records.length === 0 ? (
-        <EmptyState />
+      {filteredRecords.length === 0 ? (
+        <EmptyState
+          description="分析対象を変更するか、プレイを完了してください。"
+          title="対象となる記録がありません"
+        />
       ) : (
         <section className="ranking-grid" aria-label="キーランキング">
           <RankingList

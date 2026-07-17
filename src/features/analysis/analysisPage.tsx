@@ -13,6 +13,11 @@ import {
 import { deriveAnalytics } from "../../shared/domain/analytics.ts";
 import { useRecords } from "../../shared/storage/recordsContext.tsx";
 import {
+  AnalyticsScopeSelect,
+  filterRecordsByAnalyticsScope,
+  useAnalyticsScope,
+} from "../../shared/ui/analyticsScopeContext.tsx";
+import {
   EmptyState,
   LoadingState,
   MetricCard,
@@ -28,7 +33,12 @@ import {
 
 export function AnalysisPage() {
   const { deleteAll, isLoading, records } = useRecords();
-  const analytics = useMemo(() => deriveAnalytics(records), [records]);
+  const { scope } = useAnalyticsScope();
+  const filteredRecords = useMemo(
+    () => filterRecordsByAnalyticsScope(records, scope),
+    [records, scope],
+  );
+  const analytics = useMemo(() => deriveAnalytics(filteredRecords), [filteredRecords]);
 
   if (isLoading) {
     return <LoadingState />;
@@ -39,13 +49,17 @@ export function AnalysisPage() {
   return (
     <div className="page page-analysis">
       <PageIntro
+        action={<AnalyticsScopeSelect />}
         description="これまでの入力から、速度・正確性・苦手な位置を振り返ります。"
         eyebrow="概要"
         title="分析"
       />
 
-      {records.length === 0 ? (
-        <EmptyState />
+      {filteredRecords.length === 0 ? (
+        <EmptyState
+          description="分析対象を変更するか、プレイを完了してください。"
+          title="対象となる記録がありません"
+        />
       ) : (
         <>
           <section className="metric-grid metric-grid-seven" aria-label="全体指標">

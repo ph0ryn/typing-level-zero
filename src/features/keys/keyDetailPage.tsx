@@ -14,6 +14,11 @@ import {
 import { deriveAnalytics } from "../../shared/domain/analytics.ts";
 import { useRecords } from "../../shared/storage/recordsContext.tsx";
 import {
+  AnalyticsScopeSelect,
+  filterRecordsByAnalyticsScope,
+  useAnalyticsScope,
+} from "../../shared/ui/analyticsScopeContext.tsx";
+import {
   EmptyState,
   LoadingState,
   MetricCard,
@@ -25,8 +30,13 @@ import { formatLatency, formatPercentage, formatSpeed } from "../../shared/ui/fo
 export function KeyDetailPage() {
   const { key: routeKey } = useParams();
   const { isLoading, records } = useRecords();
+  const { scope } = useAnalyticsScope();
   const key = routeKey?.toLowerCase() ?? "";
-  const analytics = useMemo(() => deriveAnalytics(records), [records]);
+  const filteredRecords = useMemo(
+    () => filterRecordsByAnalyticsScope(records, scope),
+    [records, scope],
+  );
+  const analytics = useMemo(() => deriveAnalytics(filteredRecords), [filteredRecords]);
 
   if (!/^[a-z]$/.test(key)) {
     return <Navigate replace to="/keys" />;
@@ -47,10 +57,17 @@ export function KeyDetailPage() {
       <Link className="back-link" to="/keys">
         <ArrowLeft size={16} /> キー一覧に戻る
       </Link>
-      <PageIntro eyebrow="キー詳細" title={`${key.toUpperCase()} の詳細`} />
+      <PageIntro
+        action={<AnalyticsScopeSelect />}
+        eyebrow="キー詳細"
+        title={`${key.toUpperCase()} の詳細`}
+      />
 
-      {records.length === 0 ? (
-        <EmptyState />
+      {filteredRecords.length === 0 ? (
+        <EmptyState
+          description="分析対象を変更するか、プレイを完了してください。"
+          title="対象となる記録がありません"
+        />
       ) : (
         <>
           <section className="metric-grid metric-grid-five" aria-label={`${key}の主要指標`}>

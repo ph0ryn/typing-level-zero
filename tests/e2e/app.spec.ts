@@ -105,11 +105,25 @@ test.describe("Typing Level Zero", () => {
     await expect(page.locator("h1")).toHaveText("分析");
     await expect(page.getByText("1キーあたりの平均入力時間")).toBeVisible();
     await expect(page.locator(".page-analysis")).not.toContainText("リセット");
-    await expect(page.locator(".page-analysis .page-intro-action")).toHaveCount(0);
+    await expect(page.getByLabel("分析対象")).toHaveValue("last10");
+
+    await expect(page.getByLabel("分析対象").locator("option")).toHaveText([
+      "10回",
+      "50回",
+      "今日",
+      "3日",
+      "30日",
+      "全期間",
+    ]);
+
+    await page.getByLabel("分析対象").selectOption("today");
     await expect(page.locator(".side-navigation")).toHaveCount(0);
 
     await page.goto("keys");
     await expect(page.locator("h1")).toHaveText("キー別分析");
+    await expect(page.getByLabel("分析対象")).toHaveValue("today");
+    await page.reload();
+    await expect(page.getByLabel("分析対象")).toHaveValue("today");
     await expect(page.getByLabel("指標")).toHaveValue("latency");
     await expect(page.getByLabel("平均入力時間の凡例")).toContainText("200ms");
     await expect(page.getByLabel("平均入力時間の凡例")).toContainText("1500ms");
