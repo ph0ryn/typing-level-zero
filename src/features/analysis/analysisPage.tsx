@@ -19,7 +19,12 @@ import {
   PageIntro,
   SectionHeading,
 } from "../../shared/ui/components.tsx";
-import { formatDuration, formatPercentage, formatSpeed } from "../../shared/ui/formatters.ts";
+import {
+  formatDuration,
+  formatLatency,
+  formatPercentage,
+  formatSpeed,
+} from "../../shared/ui/formatters.ts";
 
 export function AnalysisPage() {
   const { deleteAll, isLoading, records } = useRecords();
@@ -46,9 +51,9 @@ export function AnalysisPage() {
           <section className="metric-grid metric-grid-seven" aria-label="全体指標">
             <MetricCard label="総プレイ数" value={`${overview.totalPlays}`} />
             <MetricCard
-              detail={`最速 ${overview.fastestDurationMs === null ? "—" : formatDuration(overview.fastestDurationMs)}`}
-              label="平均時間"
-              value={formatDuration(overview.averageDurationMs)}
+              detail={`最速 ${formatLatency(overview.fastestInputTimeMs)}`}
+              label="1キーあたりの平均入力時間"
+              value={formatLatency(overview.averageInputTimeMs)}
             />
             <MetricCard label="平均正答率" value={formatPercentage(overview.averageAccuracy)} />
             <MetricCard
@@ -116,8 +121,8 @@ export function AnalysisPage() {
                     <th>入力回数</th>
                     <th>正答率</th>
                     <th>ミス数</th>
-                    <th>平均latency</th>
-                    <th>中央値latency</th>
+                    <th>平均入力時間</th>
+                    <th>中央値入力時間</th>
                   </tr>
                 </thead>
                 <tbody>

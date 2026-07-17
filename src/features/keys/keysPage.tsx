@@ -20,7 +20,7 @@ type HeatmapMetric = "accuracy" | "mistakes" | "inputs" | "latency";
 const metricLabels: Record<HeatmapMetric, string> = {
   accuracy: "正答率",
   inputs: "入力回数",
-  latency: "平均latency",
+  latency: "平均入力時間",
   mistakes: "ミス数",
 };
 
@@ -48,20 +48,84 @@ function metricValue(metrics: KeyMetrics, metric: HeatmapMetric): string {
   return `${metrics.mistakeCount}`;
 }
 
-type HeatmapKeyStyle = CSSProperties & { "--heatmap-tone": string };
-
-function heatmapTone(metrics: KeyMetrics): number | null {
+function numericMetricValue(metrics: KeyMetrics, metric: HeatmapMetric): number | null {
   if (metrics.inputCount === 0) {
     return null;
   }
 
-  const accuracy = Math.min(Math.max(metrics.accuracy, 0), 1);
+  if (metric === "accuracy") {
+    return metrics.accuracy;
+  }
 
-  return Math.round(Math.max(0, (accuracy - 0.7) / 0.3) * 255);
+  if (metric === "inputs") {
+    return metrics.inputCount;
+  }
+
+  if (metric === "latency") {
+    return metrics.averageLatencyMs;
+  }
+
+  return metrics.mistakeCount;
 }
 
-function heatmapClass(metrics: KeyMetrics): string {
-  const tone = heatmapTone(metrics);
+function metricRange(
+  metrics: readonly KeyMetrics[],
+  metric: HeatmapMetric,
+): readonly [number, number] {
+  if (metric === "accuracy") {
+    return [0.7, 1];
+  }
+
+  if (metric === "latency") {
+    return [200, 1_500];
+  }
+
+  const values = metrics.flatMap((item) => {
+    const value = numericMetricValue(item, metric);
+
+    return value === null ? [] : [value];
+  });
+
+  return values.length === 0 ? [0, 0] : [Math.min(...values), Math.max(...values)];
+}
+
+function formatLegendValue(value: number, metric: HeatmapMetric): string {
+  if (metric === "accuracy") {
+    return formatPercentage(value);
+  }
+
+  if (metric === "latency") {
+    return formatLatency(value);
+  }
+
+  return `${Math.round(value)}回`;
+}
+
+type HeatmapKeyStyle = CSSProperties & { "--heatmap-tone": string };
+
+function heatmapTone(
+  metrics: KeyMetrics,
+  metric: HeatmapMetric,
+  range: readonly [number, number],
+): number | null {
+  const value = numericMetricValue(metrics, metric);
+
+  if (value === null) {
+    return null;
+  }
+
+  const [minimum, maximum] = range;
+  const normalized = maximum === minimum ? 1 : (value - minimum) / (maximum - minimum);
+
+  return Math.round(Math.min(Math.max(normalized, 0), 1) * 255);
+}
+
+function heatmapClass(
+  metrics: KeyMetrics,
+  metric: HeatmapMetric,
+  range: readonly [number, number],
+): string {
+  const tone = heatmapTone(metrics, metric, range);
 
   if (tone === null) {
     return "heatmap-key no-data";
@@ -70,8 +134,12 @@ function heatmapClass(metrics: KeyMetrics): string {
   return `heatmap-key ${tone < 150 ? "light-text" : "dark-text"}`;
 }
 
-function heatmapStyle(metrics: KeyMetrics): HeatmapKeyStyle {
-  const tone = heatmapTone(metrics) ?? 255;
+function heatmapStyle(
+  metrics: KeyMetrics,
+  metric: HeatmapMetric,
+  range: readonly [number, number],
+): HeatmapKeyStyle {
+  const tone = heatmapTone(metrics, metric, range) ?? 255;
 
   return { "--heatmap-tone": `${tone}` };
 }
@@ -117,6 +185,7 @@ export function KeysPage() {
   }
 
   const keyMetrics = analytics.keys;
+  const heatmapRange = metricRange(keyMetrics, heatmapMetric);
   const weakest = [...keyMetrics]
     .filter((item) => item.inputCount > 0)
     .sort(
@@ -186,9 +255,9 @@ export function KeysPage() {
 
                 return (
                   <Link
-                    className={heatmapClass(metrics)}
+                    className={heatmapClass(metrics, heatmapMetric, heatmapRange)}
                     key={key}
-                    style={heatmapStyle(metrics)}
+                    style={heatmapStyle(metrics, heatmapMetric, heatmapRange)}
                     to={`/keys/${key}`}
                   >
                     <strong>{key.toUpperCase()}</strong>
@@ -199,10 +268,10 @@ export function KeysPage() {
             </div>
           ))}
         </div>
-        <div className="heatmap-legend" aria-label="正答率の凡例">
-          <span>70%</span>
+        <div className="heatmap-legend" aria-label={`${metricLabels[heatmapMetric]}の凡例`}>
+          <span>{formatLegendValue(heatmapRange[0], heatmapMetric)}</span>
           <i aria-hidden="true" className="legend-gradient" />
-          <span>100%</span>
+          <span>{formatLegendValue(heatmapRange[1], heatmapMetric)}</span>
           <span>
             <i className="legend-swatch no-data" />
             データなし

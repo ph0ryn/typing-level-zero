@@ -103,7 +103,8 @@ export interface TrendPoint {
 
 export interface OverviewMetrics {
   readonly totalPlays: number;
-  readonly averageDurationMs: number;
+  readonly averageInputTimeMs: number | null;
+  readonly fastestInputTimeMs: number | null;
   readonly fastestDurationMs: number | null;
   readonly averageAccuracy: number;
   readonly averageGrossCpm: number;

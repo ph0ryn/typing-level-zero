@@ -103,12 +103,18 @@ test.describe("Typing Level Zero", () => {
 
     await page.goto("analysis");
     await expect(page.locator("h1")).toHaveText("分析");
+    await expect(page.getByText("1キーあたりの平均入力時間")).toBeVisible();
     await expect(page.locator(".page-analysis")).not.toContainText("リセット");
     await expect(page.locator(".page-analysis .page-intro-action")).toHaveCount(0);
     await expect(page.locator(".side-navigation")).toHaveCount(0);
 
     await page.goto("keys");
     await expect(page.locator("h1")).toHaveText("キー別分析");
+    await page.getByLabel("指標").selectOption("inputs");
+    await expect(page.getByLabel("入力回数の凡例")).toContainText("回");
+    await page.getByLabel("指標").selectOption("latency");
+    await expect(page.getByLabel("平均入力時間の凡例")).toContainText("200ms");
+    await expect(page.getByLabel("平均入力時間の凡例")).toContainText("1500ms");
   });
 
   test("ignores a wrong first input and cancels with Escape", async ({ page }) => {

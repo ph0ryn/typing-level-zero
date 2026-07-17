@@ -55,6 +55,8 @@ describe("analytics", () => {
 
     expect(analytics.overview.totalPlays).toBe(1);
     expect(analytics.overview.totalMistakes).toBe(1);
+    expect(analytics.overview.averageInputTimeMs).toBeCloseTo(233.33, 2);
+    expect(analytics.overview.fastestInputTimeMs).toBe(200);
     expect(keyA?.inputCount).toBe(2);
     expect(keyA?.mistakeTargets[0]?.key).toBe("s");
     expect(keyA?.mistakeTargets[0]?.count).toBe(1);

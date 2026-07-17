@@ -118,6 +118,7 @@ export function deriveAnalytics(records: readonly PlayRecord[]): AnalyticsSnapsh
     calculateSummary(record.startedAt, record.completedAt, record.events),
   );
   const events = sortedRecords.flatMap((record) => record.events);
+  const inputTimes = latencyValues(events);
   const positions = Array.from({ length: PROMPT_LENGTH }, (_, position) =>
     createPositionMetrics(position, events),
   );
@@ -127,13 +128,14 @@ export function deriveAnalytics(records: readonly PlayRecord[]): AnalyticsSnapsh
     keys,
     overview: {
       averageAccuracy: average(summaries.map((summary) => summary.accuracy)) ?? 0,
-      averageDurationMs: average(summaries.map((summary) => summary.durationMs)) ?? 0,
       averageGrossCpm: average(summaries.map((summary) => summary.grossCpm)) ?? 0,
       averageGrossWpm: average(summaries.map((summary) => summary.grossWpm)) ?? 0,
+      averageInputTimeMs: average(inputTimes),
       averageNetCpm: average(summaries.map((summary) => summary.netCpm)) ?? 0,
       averageNetWpm: average(summaries.map((summary) => summary.netWpm)) ?? 0,
       fastestDurationMs:
         summaries.length > 0 ? Math.min(...summaries.map((summary) => summary.durationMs)) : null,
+      fastestInputTimeMs: inputTimes.length > 0 ? Math.min(...inputTimes) : null,
       totalMistakes: summaries.reduce((sum, summary) => sum + summary.mistakeCount, 0),
       totalPlays: records.length,
       totalResets: summaries.reduce((sum, summary) => sum + summary.resetCount, 0),

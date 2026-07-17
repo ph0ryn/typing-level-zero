@@ -62,10 +62,10 @@ export function KeyDetailPage() {
           </section>
 
           <section className="metric-grid metric-grid-four">
-            <MetricCard label="平均latency" value={formatLatency(metrics.averageLatencyMs)} />
-            <MetricCard label="中央値latency" value={formatLatency(metrics.medianLatencyMs)} />
-            <MetricCard label="最速latency" value={formatLatency(metrics.fastestLatencyMs)} />
-            <MetricCard label="最遅latency" value={formatLatency(metrics.slowestLatencyMs)} />
+            <MetricCard label="平均入力時間" value={formatLatency(metrics.averageLatencyMs)} />
+            <MetricCard label="中央値入力時間" value={formatLatency(metrics.medianLatencyMs)} />
+            <MetricCard label="最速入力時間" value={formatLatency(metrics.fastestLatencyMs)} />
+            <MetricCard label="最遅入力時間" value={formatLatency(metrics.slowestLatencyMs)} />
           </section>
 
           <section className="detail-grid">
@@ -94,7 +94,7 @@ export function KeyDetailPage() {
                       <th>位置</th>
                       <th>回数</th>
                       <th>正答率</th>
-                      <th>latency</th>
+                      <th>入力時間</th>
                     </tr>
                   </thead>
                   <tbody>
