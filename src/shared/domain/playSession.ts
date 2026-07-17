@@ -101,6 +101,7 @@ export function applySessionAction(
     events,
     mistakeCount: state.mistakeCount + (isCorrect ? 0 : 1),
     resetCount,
+    startedAt: isCorrect ? state.startedAt : action.timestampMs,
     totalInputs: state.totalInputs + 1,
   };
 

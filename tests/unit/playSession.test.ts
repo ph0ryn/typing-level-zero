@@ -43,9 +43,32 @@ describe("play session", () => {
     expect(third.state.cursor).toBe(0);
     expect(third.state.mistakeCount).toBe(1);
     expect(third.state.resetCount).toBe(1);
+    expect(third.state.startedAt).toBe(1_250);
     expect(event?.positionBefore).toBe(2);
     expect(event?.positionAfter).toBe(0);
     expect(event?.intervalMs).toBe(150);
+  });
+
+  it("measures completion time from the most recent reset", () => {
+    let state = createIdleSession("abc");
+
+    state = applySessionAction(state, input("a", 1_000)).state;
+    state = applySessionAction(state, input("x", 1_500)).state;
+    state = applySessionAction(state, input("a", 1_700)).state;
+    state = applySessionAction(state, input("b", 1_800)).state;
+    const completed = applySessionAction(state, input("c", 1_900));
+
+    expect(completed.completedRecord?.startedAt).toBe(1_500);
+    expect(completed.completedRecord?.durationMs).toBe(400);
+    expect(completed.completedRecord?.summary.mistakeCount).toBe(1);
+    expect(completed.completedRecord?.summary.resetCount).toBe(1);
+
+    expect(completed.completedRecord?.events.map((event) => event.intervalMs)).toEqual([
+      null,
+      200,
+      100,
+      100,
+    ]);
   });
 
   it("completes a play and stores the first input only in the summary total", () => {
