@@ -115,6 +115,7 @@ test.describe("Typing Level Zero", () => {
     await page.getByLabel("指標").selectOption("latency");
     await expect(page.getByLabel("平均入力時間の凡例")).toContainText("200ms");
     await expect(page.getByLabel("平均入力時間の凡例")).toContainText("1500ms");
+    await expect(page.locator(".legend-gradient-reversed")).toBeVisible();
   });
 
   test("ignores a wrong first input and cancels with Escape", async ({ page }) => {

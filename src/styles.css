@@ -742,6 +742,10 @@ select:focus-visible {
   background: linear-gradient(to right, var(--heatmap-gradient-start), var(--heatmap-gradient-end));
 }
 
+.legend-gradient-reversed {
+  background: linear-gradient(to left, var(--heatmap-gradient-start), var(--heatmap-gradient-end));
+}
+
 .legend-swatch {
   display: inline-block;
   width: 18px;

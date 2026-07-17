@@ -116,8 +116,9 @@ function heatmapTone(
 
   const [minimum, maximum] = range;
   const normalized = maximum === minimum ? 1 : (value - minimum) / (maximum - minimum);
+  const tone = metric === "latency" ? 1 - normalized : normalized;
 
-  return Math.round(Math.min(Math.max(normalized, 0), 1) * 255);
+  return Math.round(Math.min(Math.max(tone, 0), 1) * 255);
 }
 
 function heatmapClass(
@@ -270,7 +271,10 @@ export function KeysPage() {
         </div>
         <div className="heatmap-legend" aria-label={`${metricLabels[heatmapMetric]}の凡例`}>
           <span>{formatLegendValue(heatmapRange[0], heatmapMetric)}</span>
-          <i aria-hidden="true" className="legend-gradient" />
+          <i
+            aria-hidden="true"
+            className={`legend-gradient ${heatmapMetric === "latency" ? "legend-gradient-reversed" : ""}`}
+          />
           <span>{formatLegendValue(heatmapRange[1], heatmapMetric)}</span>
           <span>
             <i className="legend-swatch no-data" />
