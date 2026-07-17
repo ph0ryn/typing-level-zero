@@ -13,7 +13,6 @@ function event(overrides: Partial<InputEventRecord>): InputEventRecord {
     physicalCode: "KeyA",
     positionAfter: 1,
     positionBefore: 0,
-    resetCount: 0,
     sequence: 1,
     timestampMs: 1_000,
     ...overrides,

@@ -9,7 +9,6 @@ export function createIdleSession(prompt: string = generatePrompt()): PlaySessio
     events: [],
     mistakeCount: 0,
     prompt,
-    resetCount: 0,
     startedAt: null,
     status: "idle",
     totalInputs: 0,
@@ -77,7 +76,6 @@ export function applySessionAction(
   const expectedKey = state.prompt[positionBefore] ?? "";
   const isCorrect = actualKey === expectedKey;
   const positionAfter = isCorrect ? positionBefore + 1 : 0;
-  const resetCount = state.resetCount + (isCorrect ? 0 : 1);
   const previousEvent = state.events.at(-1);
   const intervalMs = previousEvent
     ? Math.max(0, action.timestampMs - previousEvent.timestampMs)
@@ -90,7 +88,6 @@ export function applySessionAction(
     physicalCode: action.physicalCode,
     positionAfter,
     positionBefore,
-    resetCount,
     sequence: state.events.length + 1,
     timestampMs: action.timestampMs,
   };
@@ -100,7 +97,6 @@ export function applySessionAction(
     cursor: positionAfter,
     events,
     mistakeCount: state.mistakeCount + (isCorrect ? 0 : 1),
-    resetCount,
     startedAt: isCorrect ? state.startedAt : action.timestampMs,
     totalInputs: state.totalInputs + 1,
   };

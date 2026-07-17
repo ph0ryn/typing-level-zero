@@ -22,7 +22,6 @@ export function calculateSummary(
     mistakeCount,
     netCpm,
     netWpm: netCpm / 5,
-    resetCount: mistakeCount,
     totalInputs: events.length + 1,
   };
 }

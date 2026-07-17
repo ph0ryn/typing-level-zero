@@ -28,7 +28,6 @@ describe("play session", () => {
 
     expect(first.state.cursor).toBe(0);
     expect(first.state.mistakeCount).toBe(0);
-    expect(first.state.resetCount).toBe(0);
     expect(second.state.totalInputs).toBe(2);
     expect(event?.intervalMs).toBeNull();
     expect(event?.isCorrect).toBe(true);
@@ -42,7 +41,6 @@ describe("play session", () => {
 
     expect(third.state.cursor).toBe(0);
     expect(third.state.mistakeCount).toBe(1);
-    expect(third.state.resetCount).toBe(1);
     expect(third.state.startedAt).toBe(1_250);
     expect(event?.positionBefore).toBe(2);
     expect(event?.positionAfter).toBe(0);
@@ -61,7 +59,6 @@ describe("play session", () => {
     expect(completed.completedRecord?.startedAt).toBe(1_500);
     expect(completed.completedRecord?.durationMs).toBe(400);
     expect(completed.completedRecord?.summary.mistakeCount).toBe(1);
-    expect(completed.completedRecord?.summary.resetCount).toBe(1);
 
     expect(completed.completedRecord?.events.map((event) => event.intervalMs)).toEqual([
       null,

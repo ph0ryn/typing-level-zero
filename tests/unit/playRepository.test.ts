@@ -23,7 +23,6 @@ const record: PlayRecord = {
     mistakeCount: 0,
     netCpm: 0,
     netWpm: 0,
-    resetCount: 0,
     totalInputs: 1,
   },
 };

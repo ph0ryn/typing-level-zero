@@ -7,7 +7,6 @@ export interface PlaySummary {
   readonly totalInputs: number;
   readonly correctInputs: number;
   readonly mistakeCount: number;
-  readonly resetCount: number;
   readonly accuracy: number;
   readonly grossCpm: number;
   readonly grossWpm: number;
@@ -25,7 +24,6 @@ export interface InputEventRecord {
   readonly actualKey: string;
   readonly physicalCode: string;
   readonly isCorrect: boolean;
-  readonly resetCount: number;
 }
 
 export interface PlayRecord {
@@ -45,7 +43,6 @@ export interface PlaySessionState {
   readonly startedAt: number | null;
   readonly totalInputs: number;
   readonly mistakeCount: number;
-  readonly resetCount: number;
   readonly events: readonly InputEventRecord[];
 }
 
@@ -112,7 +109,6 @@ export interface OverviewMetrics {
   readonly averageNetCpm: number;
   readonly averageNetWpm: number;
   readonly totalMistakes: number;
-  readonly totalResets: number;
 }
 
 export interface AnalyticsSnapshot {

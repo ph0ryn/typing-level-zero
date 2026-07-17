@@ -138,7 +138,6 @@ export function deriveAnalytics(records: readonly PlayRecord[]): AnalyticsSnapsh
       fastestInputTimeMs: inputTimes.length > 0 ? Math.min(...inputTimes) : null,
       totalMistakes: summaries.reduce((sum, summary) => sum + summary.mistakeCount, 0),
       totalPlays: records.length,
-      totalResets: summaries.reduce((sum, summary) => sum + summary.resetCount, 0),
     },
     positions,
     trends: sortedRecords.slice(-TREND_LIMIT).map(createRecordTrend),
