@@ -110,6 +110,10 @@ test.describe("Typing Level Zero", () => {
 
     await page.goto("keys");
     await expect(page.locator("h1")).toHaveText("キー別分析");
+    await expect(page.getByLabel("指標")).toHaveValue("latency");
+    await expect(page.getByLabel("平均入力時間の凡例")).toContainText("200ms");
+    await expect(page.getByLabel("平均入力時間の凡例")).toContainText("1500ms");
+    await expect(page.locator(".ranking-card").first()).toContainText("入力が遅いキー");
     await page.getByLabel("指標").selectOption("inputs");
     await expect(page.getByLabel("入力回数の凡例")).toContainText("回");
     await page.getByLabel("指標").selectOption("latency");

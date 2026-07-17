@@ -178,7 +178,7 @@ function RankingList({
 
 export function KeysPage() {
   const { isLoading, records } = useRecords();
-  const [heatmapMetric, setHeatmapMetric] = useState<HeatmapMetric>("accuracy");
+  const [heatmapMetric, setHeatmapMetric] = useState<HeatmapMetric>("latency");
   const analytics = useMemo(() => deriveAnalytics(records), [records]);
 
   if (isLoading) {
@@ -288,6 +288,11 @@ export function KeysPage() {
       ) : (
         <section className="ranking-grid" aria-label="キーランキング">
           <RankingList
+            items={slowest}
+            title="入力が遅いキー"
+            value={(item) => formatLatency(item.averageLatencyMs)}
+          />
+          <RankingList
             items={weakest}
             title="要注意キー（正答率）"
             value={(item) => formatPercentage(item.accuracy)}
@@ -296,11 +301,6 @@ export function KeysPage() {
             items={mostMistakes}
             title="ミスが多いキー"
             value={(item) => `${item.mistakeCount}回`}
-          />
-          <RankingList
-            items={slowest}
-            title="入力が遅いキー"
-            value={(item) => formatLatency(item.averageLatencyMs)}
           />
           <RankingList
             items={strongest}
